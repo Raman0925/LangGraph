@@ -1,10 +1,8 @@
-import os
-
 from dotenv import load_dotenv, find_dotenv
 from langchain_community.tools import ArxivQueryRun, WikipediaQueryRun
-from langchain_community.tools.tavily_search import TavilySearch
 from langchain_community.utilities import WikipediaAPIWrapper, ArxivAPIWrapper
 from langchain_groq import ChatGroq
+from langchain_tavily import TavilySearch
 
 load_dotenv(find_dotenv())
 
@@ -27,8 +25,6 @@ tavily_tool = TavilySearch(k=3)
 tools = [arxiv_tool, wikipedia_tool, tavily_tool]
 
 llm = ChatGroq(model="llama-3.1-8b-instant")
-
-llm = ChatGroq(model=groq_model)
 llm_with_tools = llm.bind_tools(tools)
 
 print(llm_with_tools.invoke("What is the latest research on quantum computing?"))

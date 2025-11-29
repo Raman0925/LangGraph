@@ -6,3 +6,7 @@ langchain-community
 ipython
 langchain-groq
 python-dotenv
+arxiv
+wikipedia
+tavily-python
+langchain-tavily
