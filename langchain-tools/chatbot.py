@@ -1,9 +1,12 @@
-from dotenv import load_dotenv
+import os
+
+from dotenv import load_dotenv, find_dotenv
 from langchain_community.tools import ArxivQueryRun, WikipediaQueryRun
+from langchain_community.tools.tavily_search import TavilySearch
 from langchain_community.utilities import WikipediaAPIWrapper, ArxivAPIWrapper
 from langchain_groq import ChatGroq
 
-load_dotenv()  
+load_dotenv(find_dotenv())
 
 api_wrapper_arxiv = ArxivAPIWrapper(top_k_results=3, doc_content_chars_max=500)
 arxiv_tool = ArxivQueryRun(
@@ -19,10 +22,13 @@ wikipedia_tool = WikipediaQueryRun(
     description="Search for information on Wikipedia",
 )
 
-tools = [arxiv_tool, wikipedia_tool]
+tavily_tool = TavilySearch(k=3)
 
-llm = ChatGroq(model="llama3-8b-8192")
+tools = [arxiv_tool, wikipedia_tool, tavily_tool]
 
-print(llm.invoke("What is the latest research on quantum computing?"))
+llm = ChatGroq(model="llama-3.1-8b-instant")
 
-llm.bind_tools(tools)
+llm = ChatGroq(model=groq_model)
+llm_with_tools = llm.bind_tools(tools)
+
+print(llm_with_tools.invoke("What is the latest research on quantum computing?"))
